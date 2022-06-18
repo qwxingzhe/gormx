@@ -63,7 +63,7 @@ func InitOrm(mysqlConfig MysqlConfig, cache cache.CacheInterface) Orm {
 		gormDb, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
 			NamingStrategy: schema.NamingStrategy{
 				TablePrefix:   mysqlConfig.DBTablePrefix,
-				SingularTable: true,
+				SingularTable: mysqlConfig.SingularTable,
 			},
 		})
 		if err != nil {

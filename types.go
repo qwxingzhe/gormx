@@ -9,6 +9,7 @@ type MysqlConfig struct {
 	DBMaxOpenConns int
 	DBMaxIdleConns int
 	DBMaxLifeTime  int64
+	SingularTable  bool
 }
 type RedisConfig struct {
 	Addr     string
