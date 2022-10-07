@@ -20,7 +20,7 @@ func (o Orm) getCacheKey(info interface{}, id int64) string {
 
 // 删除缓存
 func (o Orm) delCacheByInfo(info interface{}) error {
-	if o.cache != nil {
+	if o.cache == nil {
 		return nil
 	}
 	refH := reflect.ValueOf(info)
@@ -36,7 +36,7 @@ func (o Orm) delCacheByInfo(info interface{}) error {
 
 // 新建缓存
 func (o Orm) setCache(key string, value interface{}) error {
-	if o.cache != nil {
+	if o.cache == nil {
 		return nil
 	}
 	str1, err := json.Marshal(&value)
@@ -49,7 +49,7 @@ func (o Orm) setCache(key string, value interface{}) error {
 
 // 查询缓存
 func (o Orm) getCache(key string) string {
-	if o.cache != nil {
+	if o.cache == nil {
 		return ""
 	}
 	return o.cache.GetCache(key)
@@ -57,7 +57,7 @@ func (o Orm) getCache(key string) string {
 
 // 删除缓存
 func (o Orm) delCache(key string) error {
-	if o.cache != nil {
+	if o.cache == nil {
 		return nil
 	}
 	return o.cache.DelCache(key)

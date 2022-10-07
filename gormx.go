@@ -41,16 +41,20 @@ type (
 		Format() interface{}
 	}
 	Orm struct {
-		GormDb       *gorm.DB
+		// gorm实例
+		GormDb *gorm.DB
+		// 默认排序方式
 		DefaultOrder string
-		cache        cache.CacheInterface
+		// 缓存引擎实现实例
+		cache cache.Interface
 	}
 )
 
 var instance Orm
 var once sync.Once
 
-func InitOrm(mysqlConfig MysqlConfig, cache cache.CacheInterface) Orm {
+// InitOrm 初始化orm单例对象
+func InitOrm(mysqlConfig MysqlConfig, cache cache.Interface) Orm {
 	once.Do(func() {
 		var gormDb *gorm.DB
 		var err error
@@ -176,6 +180,7 @@ func FormatList(originList interface{}, formatFunc interface{}) []interface{} {
 	return nil
 }
 
+// KeyList 获取list中指定key数组
 func KeyList(originList interface{}, key string) []interface{} {
 	switch reflect.TypeOf(originList).Kind() {
 	case reflect.Slice, reflect.Array:
@@ -190,25 +195,28 @@ func KeyList(originList interface{}, key string) []interface{} {
 	return nil
 }
 
-// 开始事务
+// Begin 开始事务
 func (o Orm) Begin() Orm {
 	o.GormDb = o.GormDb.Begin()
 	return o
 }
 
-// 回滚事务
+// Rollback 回滚事务
 func (o Orm) Rollback() {
 	o.GormDb.Rollback()
 }
 
-// 提交事务
+// Commit 提交事务
 func (o Orm) Commit() {
 	o.GormDb.Commit()
 }
 
+// GetInfoByKey 通过指定的key、value获取数据
 func (o Orm) GetInfoByKey(info interface{}, key string, value interface{}) {
 	o.GormDb.Where(key+" = ?", value).First(info)
 }
+
+// GetInfoByKeyLike 通过模糊匹配获取数据
 func (o Orm) GetInfoByKeyLike(info interface{}, key string, value interface{}) {
 	o.GormDb.Where(key+" like ?", value).First(info)
 }
