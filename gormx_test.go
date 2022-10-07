@@ -5,16 +5,19 @@ import (
 	"testing"
 )
 
-func initOrm() Orm {
-	//dbconfig := MysqlConfig{
-	//	DBAddress:      "127.0.0.1:3306",
-	//	DBUserName:     "root",
-	//	DBPassword:     "123456",
-	//	DBDatabaseName: "test",
-	//}
-	dbconfig := getTestMysqlConfig()
+//func getTestMysqlConfig() MysqlConfig {
+//	config := MysqlConfig{
+//		DBAddress:      "127.0.0.1:3306",
+//		DBUserName:     "root",
+//		DBPassword:     "123456",
+//		DBDatabaseName: "test",
+//	}
+//	return config
+//}
 
-	return InitOrm(dbconfig, nil)
+func initOrm() Orm {
+	config := getTestMysqlConfig()
+	return InitOrm(config, nil)
 }
 
 type User struct {
