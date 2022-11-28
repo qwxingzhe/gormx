@@ -21,4 +21,6 @@ type PageInfo struct {
 	CurrentPage int `json:"current_page"`
 	// 页面记录条数
 	PageSize int `json:"page_size"`
+	// 总记录数
+	Total int64 `json:"total"`
 }
