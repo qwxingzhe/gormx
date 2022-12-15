@@ -3,6 +3,7 @@ package gormx
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"reflect"
 	"sync"
 	"time"
@@ -47,6 +48,8 @@ type (
 		DefaultOrder string
 		// 缓存引擎实现实例
 		cache cache.Interface
+		// 是否使用table方式检索
+		useTable bool
 	}
 )
 
@@ -278,15 +281,37 @@ func (o Orm) SetDefaultOrder(s string) Orm {
 	return o
 }
 
+func (o Orm) Table(name string, args ...interface{}) Orm {
+	o.GormDb = o.GormDb.Table(name, args...)
+	o.useTable = true
+	return o
+}
+func (o Orm) Joins(query string, args ...interface{}) Orm {
+	o.GormDb = o.GormDb.Joins(query, args...)
+	return o
+}
+
+func (o Orm) ClearTempData() Orm {
+	o.useTable = false
+	return o
+}
+
 // FindPage 查询记录列表
 func (o Orm) FindPage(pageSize int, page int, list interface{}, maps map[string]interface{}) PageInfo {
 	var total int64 = 0
-	if page == 0 {
-		o.Where(maps).Order(o.DefaultOrder).GormDb.Find(list)
+	offset := pageSize * (page - 1)
+
+	log.Println("o.useTable : ", o.useTable, o.DefaultOrder, offset, pageSize)
+
+	if o.useTable {
+		o.Where(maps).Order(o.DefaultOrder).GormDb.Offset(offset).Limit(pageSize).Scan(list)
 	} else {
-		offset := pageSize * (page - 1)
-		o.Where(maps).Order(o.DefaultOrder).GormDb.Offset(offset).Limit(pageSize).Find(list)
-		total = o.Count(list, maps)
+		if page == 0 {
+			o.Where(maps).Order(o.DefaultOrder).GormDb.Find(list)
+		} else {
+			o.Where(maps).Order(o.DefaultOrder).GormDb.Offset(offset).Limit(pageSize).Find(list)
+			total = o.Count(list, maps)
+		}
 	}
 
 	return PageInfo{
