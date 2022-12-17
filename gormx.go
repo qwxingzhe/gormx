@@ -233,6 +233,7 @@ func (o Orm) First(info interface{}, maps map[string]interface{}) {
 }
 
 func (o Orm) Order(v interface{}) Orm {
+	o.DefaultOrder = ""
 	o.GormDb = o.GormDb.Order(v)
 	return o
 }
