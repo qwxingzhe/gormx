@@ -24,3 +24,21 @@ type PageInfo struct {
 	// 总记录数
 	Total int64 `json:"total"`
 }
+
+type FilterConfig struct {
+	Order    string
+	MaxLimit int
+}
+type ListConfig struct {
+	GetFilter    map[string]interface{}
+	FilterConfig FilterConfig
+	FormatEvery  bool
+}
+type UpdateConfig struct {
+	GetFilter map[string]interface{}
+	EmptyMsg  string
+}
+type PageResult struct {
+	List     interface{} `json:"list"`
+	PageInfo PageInfo    `json:"page_info"`
+}
