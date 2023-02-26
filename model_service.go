@@ -29,7 +29,7 @@ func GetList[TBase, TFormat any](orm Orm, c *ListConfig) []TFormat {
 		info = cast2.CopyStruct(item, info)
 		list = append(list, info)
 	}
-	if c.FormatEvery {
+	if c != nil && c.FormatEvery {
 		for i, tf := range list {
 			list[i] = Format(tf)
 		}
