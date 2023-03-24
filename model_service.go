@@ -13,7 +13,10 @@ func CreateOne[TBase, TFormat any](orm Orm, data TBase) (info TFormat) {
 	info = Format(info)
 	return
 }
-
+func CreateOneSimp[TBase any](orm Orm, data TBase) TBase {
+	orm.Save(&data)
+	return data
+}
 func Format[T any](info T) T {
 	if obj, ok := interface{}(info).(interface{ Format() T }); ok {
 		info = obj.Format()
@@ -21,16 +24,20 @@ func Format[T any](info T) T {
 	return info
 }
 
-func UpdateOne[TBase, TFormat any](orm Orm, data TBase) (info TFormat) {
-	orm.Save(&data)
+func GetOne[TBase, TFormat any](orm Orm, where map[string]interface{}) (info TFormat) {
+	var data TBase
+	orm.First(&data, where)
 	info = cast2.CopyStruct(data, info)
 	info = Format(info)
 	return
 }
+func GetOneSimp[TBase any](orm Orm, where map[string]interface{}) (info TBase) {
+	orm.First(&info, where)
+	return
+}
 
-func GetOne[TBase, TFormat any](orm Orm, where map[string]interface{}) (info TFormat) {
-	var data TBase
-	orm.First(&data, where)
+func UpdateOne[TBase, TFormat any](orm Orm, data TBase) (info TFormat) {
+	orm.Save(&data)
 	info = cast2.CopyStruct(data, info)
 	info = Format(info)
 	return
