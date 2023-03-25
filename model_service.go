@@ -145,6 +145,12 @@ func GetListSimp[TBase any](orm Orm, c *ListConfig) []TBase {
 	return baseList
 }
 
+func Count[TBase any](orm Orm, maps map[string]interface{}) (count int64) {
+	var list []TBase
+	orm.Where(maps).GormDb.Find(&list).Count(&count)
+	return
+}
+
 // FindPage 查询记录列表
 func FindPage[TBase, TFormat any](o Orm, pageSize int, pageStr interface{}, c *ListConfig) PageResult {
 	var baseList []TBase
