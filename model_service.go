@@ -36,6 +36,11 @@ func GetOneSimp[TBase any](orm Orm, where map[string]interface{}) (info TBase) {
 	return
 }
 
+func UpdateOneSimp[TBase any](orm Orm, data TBase) TBase {
+	orm.Save(&data)
+	return data
+}
+
 func UpdateOne[TBase, TFormat any](orm Orm, data TBase) (info TFormat) {
 	orm.Save(&data)
 	info = cast2.CopyStruct(data, info)
