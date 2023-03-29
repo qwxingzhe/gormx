@@ -41,7 +41,7 @@ func UpdateOneSimp[TBase any](orm Orm, data TBase) TBase {
 	return data
 }
 
-func UpdateOne[TBase, TFormat any](orm Orm, data TBase) (info TFormat) {
+func UpdateOne[TFormat, TBase any](orm Orm, data TBase) (info TFormat) {
 	orm.Save(&data)
 	info = cast2.CopyStruct(data, info)
 	info = Format(info)
@@ -65,7 +65,7 @@ func Update[Tm, Tf any](orm Orm, uc UpdateConfig, SetFunc func(info Tm) (Tm, err
 		return
 	}
 
-	info2 = UpdateOne[Tm, Tf](orm, info)
+	info2 = UpdateOne[Tf](orm, info)
 	return
 }
 
