@@ -30,7 +30,7 @@ type FilterConfig struct {
 	MaxLimit int
 }
 type ListConfig struct {
-	GetFilter    map[string]interface{}
+	Filter       map[string]interface{}
 	FilterConfig FilterConfig
 	FormatEvery  bool
 }

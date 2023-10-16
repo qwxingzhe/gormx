@@ -88,26 +88,14 @@ func Delete[Tm any](orm Orm, uc UpdateConfig) (err error) {
 //+--------------------------------------------------------------------------------
 
 // GetList 简单获取查询DB格式化后的列表
-func GetList[TBase, TFormat any](orm Orm, c *ListConfig) []TFormat {
+func GetList[TBase, TFormat any](orm Orm, c ListConfig) []TFormat {
 	baseList := GetListSimp[TBase](orm, c)
 
-	formatEvery := false
-	if c != nil {
-		formatEvery = c.FormatEvery
-	}
-	return FormatListSimp[TBase, TFormat](baseList, formatEvery)
-	//var list []TFormat
-	//for _, item := range baseList {
-	//	var info TFormat
-	//	info = cast2.CopyStruct(item, info)
-	//	list = append(list, info)
+	//formatEvery := false
+	//if c != nil {
+	//	formatEvery = c.FormatEvery
 	//}
-	//if c != nil && c.FormatEvery {
-	//	for i, tf := range list {
-	//		list[i] = Format(tf)
-	//	}
-	//}
-	//return list
+	return FormatListSimp[TBase, TFormat](baseList, c.FormatEvery)
 }
 
 func FormatListSimp[TBase, TFormat any](baseList []TBase, formatEvery bool) []TFormat {
@@ -125,19 +113,18 @@ func FormatListSimp[TBase, TFormat any](baseList []TBase, formatEvery bool) []TF
 	return list
 }
 
-func GetListSimp[TBase any](orm Orm, c *ListConfig) []TBase {
+func GetListSimp[TBase any](orm Orm, c ListConfig) []TBase {
 	var baseList []TBase
+
+	if c.FilterConfig.Order != "" {
+		orm = orm.Order(c.FilterConfig.Order)
+	}
+	if c.FilterConfig.MaxLimit > 0 {
+		orm = orm.Limit(c.FilterConfig.MaxLimit)
+	}
 	whereTrue := map[string]interface{}{}
-	if c != nil {
-		if c.FilterConfig.Order != "" {
-			orm = orm.Order(c.FilterConfig.Order)
-		}
-		if c.FilterConfig.MaxLimit > 0 {
-			orm = orm.Limit(c.FilterConfig.MaxLimit)
-		}
-		if c.GetFilter != nil {
-			whereTrue = c.GetFilter
-		}
+	if c.Filter != nil {
+		whereTrue = c.Filter
 	}
 
 	orm.Find(&baseList, whereTrue)
@@ -162,11 +149,9 @@ func FindPage[TBase, TFormat any](o Orm, pageSize int, pageStr interface{}, c *L
 	log.Println("o.useTable : ", o.useTable, o.DefaultOrder, offset, pageSize)
 
 	maps := map[string]interface{}{}
-	if c != nil {
-		maps = c.GetFilter
+	if c.Filter != nil {
+		maps = c.Filter
 	}
-
-	log.Println("maps", maps)
 
 	if o.useTable {
 		o.Where(maps).Order(o.DefaultOrder).GormDb.Offset(offset).Limit(pageSize).Scan(&baseList)
