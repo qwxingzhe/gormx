@@ -110,6 +110,9 @@ func FormatListSimp[TBase, TFormat any](baseList []TBase, formatEvery bool) []TF
 			list[i] = Format(tf)
 		}
 	}
+	if len(list) == 0 {
+		list = []TFormat{}
+	}
 	return list
 }
 
