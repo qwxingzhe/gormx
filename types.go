@@ -1,15 +1,15 @@
 package gormx
 
 type MysqlConfig struct {
-	DBAddress      string
-	DBUserName     string
-	DBPassword     string
-	DBDatabaseName string
-	DBTablePrefix  string
-	DBMaxOpenConns int
-	DBMaxIdleConns int
-	DBMaxLifeTime  int64
-	SingularTable  bool
+	DBAddress      string `yaml:"DBAddress" json:"DBAddress"`
+	DBUserName     string `yaml:"DBUserName" json:"DBUserName"`
+	DBPassword     string `yaml:"DBPassword" json:"DBPassword"`
+	DBDatabaseName string `yaml:"DBDatabaseName" json:"DBDatabaseName"`
+	DBTablePrefix  string `yaml:"DBTablePrefix" json:"DBTablePrefix"`
+	DBMaxOpenConns int    `yaml:"DBMaxOpenConns" json:"DBMaxOpenConns"`
+	DBMaxIdleConns int    `yaml:"DBMaxIdleConns" json:"DBMaxIdleConns"`
+	DBMaxLifeTime  int64  `yaml:"DBMaxLifeTime" json:"DBMaxLifeTime"`
+	SingularTable  bool   `yaml:"SingularTable" json:"SingularTable"`
 }
 type RedisConfig struct {
 	Addr     string
